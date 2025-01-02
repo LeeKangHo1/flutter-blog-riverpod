@@ -14,7 +14,7 @@ class SessionUser {
 
 // GVM -> Global View Model -> 많은 화면에서 사용하는 모델
 class SessionGVM extends Notifier<SessionUser> {
-  // TODO 2: main.dart에서 설정한 navigatorKey 를 가져온다.
+  // main.dart에서 설정한 navigatorKey 를 가져온다.
   final mContext = navigatorKey
       .currentContext!; // currentContext -> 화면 없으면 null일 수 있다. 근데 여기서는 절대 null 아니니까 !적음
   UserRepository userRepository = const UserRepository();
@@ -46,7 +46,7 @@ class SessionGVM extends Notifier<SessionUser> {
       );
       return;
     }
-    // 로그인 성공
+    // 가입 성공 시 로그인 페이지로
     Navigator.pushNamed(mContext, "/login");
   }
 
