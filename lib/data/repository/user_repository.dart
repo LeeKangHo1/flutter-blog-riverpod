@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_blog/_core/utils/my_http.dart';
+import 'package:logger/logger.dart';
 
 class UserRepository {
   const UserRepository();
@@ -17,7 +18,7 @@ class UserRepository {
     // JSON오면 알아서 Map으로 바꿔줌
     Map<String, dynamic> body = response.data;
     // TODO: test 코드 작성 - 직접 해보기
-    // Logger().d(body);
+    Logger().d(body);
     return body;
   }
 }
