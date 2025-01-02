@@ -33,8 +33,8 @@ class SessionGM extends Notifier<SessionUser> {
     Future.delayed(
       Duration(seconds: 3),
       () {
-        // 곰돌이 화면에서 3초 대기 후 화면 이동
-        Navigator.popAndPushNamed(mContext, "/post/list");
+        // 곰돌이 화면에서 3초 대기 후 "/login"으로 이동
+        Navigator.popAndPushNamed(mContext, "/login");
       },
     );
   }
