@@ -31,10 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
   # 라이브러리 버전 문제가 발생하면 pub dev에서 최신 버전으로 업그레이드하세요
-  flutter_svg: ^2.0.6
-  flutter_lints: ^2.0.1
-  validators: ^3.0.0
-  intl: ^0.18.1
+  flutter_svg: ^2.0.6 # svg파일은 사진이 매우 커져도 깨지지 않음
+  flutter_lints: ^2.0.1 # 지금 몰라도 됨
+  validators: ^3.0.0 # 나중에 시간 남으면 알아서
+  intl: ^0.18.1 # 텍스트 등의 국제화 및 지역화 -> 배포 단계에서 필요
   cupertino_icons: ^1.0.2
   dio: ^5.2.0 # 서버와 통신하기 위해 필요한 라이브러리 입니다.
   flutter_riverpod: ^2.3.6 # 상태관리 Riverpod 라이브러리 입니다.
