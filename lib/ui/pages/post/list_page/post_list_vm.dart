@@ -19,7 +19,7 @@ class PostListModel {
   List<Post> posts;
 
   PostListModel.fromMap(Map<String, dynamic> map)
-      : isFirst = map["isisFirst"],
+      : isFirst = map["isFirst"],
         isLast = map["isLast"],
         pageNumber = map["pageNumber"],
         size = map["size"],
@@ -57,7 +57,6 @@ class PostListVM extends Notifier<PostListModel?> {
       );
       return;
     }
-
     state = PostListModel.fromMap(responseBody["response"]);
   }
 }

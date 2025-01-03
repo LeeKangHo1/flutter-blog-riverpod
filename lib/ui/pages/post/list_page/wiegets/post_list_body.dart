@@ -12,6 +12,7 @@ class PostListBody extends ConsumerWidget {
     if (model == null) {
       return Center(child: CircularProgressIndicator());
     } else {
+      print("body 로드 완료");
       return ListView.separated(
         itemCount: model.posts.length,
         itemBuilder: (context, index) {
@@ -22,7 +23,7 @@ class PostListBody extends ConsumerWidget {
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => PostDetailPage()));
             },
-            child: PostListItem(),
+            child: PostListItem(post: model.posts[index]),
           );
         },
         // TODO 지우면 어떻게 되는지 테스트, ListView.separated에서 사용 가능, row 사이 border 생성
