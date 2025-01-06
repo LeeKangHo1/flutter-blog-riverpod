@@ -9,11 +9,11 @@ import '../../../../main.dart';
 class PostDetailModel {
   Post post;
 
-  // PostDetailModel({required this.post});
-  //
-  // PostDetailModel copyWith({Post? post}) {
-  //   return PostDetailModel(post: post ?? this.post);
-  // }
+  PostDetailModel({required this.post});
+
+  PostDetailModel copyWith({Post? post}) {
+    return PostDetailModel(post: post ?? this.post);
+  }
 
   PostDetailModel.fromMap(Map<String, dynamic> map) : post = Post.fromMap(map);
 }
@@ -68,5 +68,45 @@ class PostDetailVM extends AutoDisposeFamilyNotifier<PostDetailModel?, int> {
     Navigator.pop(mContext);
   }
 
-// TODO: update, add
+  Future<void> update(int id, String title, String content) async {
+    final requestBody = {
+      "title": title,
+      "content": content,
+    };
+    Map<String, dynamic> responseBody =
+        await postRepository.update(id, requestBody);
+
+    if (!responseBody["success"]) {
+      ScaffoldMessenger.of(mContext!).showSnackBar(
+        SnackBar(content: Text("게시글 수정 실패 : ${responseBody["errorMessage"]}")),
+      );
+      return;
+    }
+    state = PostDetailModel.fromMap(responseBody["response"]);
+    ref
+        .read(postListProvider.notifier)
+        .update(Post.fromMap(responseBody["response"]));
+
+    Navigator.pop(mContext);
+  }
+
+  Future<void> add(String title, String content) async {
+    final requestBody = {
+      "title": title,
+      "content": content,
+    };
+    Map<String, dynamic> responseBody = await postRepository.add(requestBody);
+
+    if (!responseBody["success"]) {
+      ScaffoldMessenger.of(mContext!).showSnackBar(
+        SnackBar(content: Text("글쓰기 실패 : ${responseBody["errorMessage"]}")),
+      );
+      return;
+    }
+    ref
+        .read(postListProvider.notifier)
+        .add(Post.fromMap(responseBody["response"]));
+
+    Navigator.popAndPushNamed(mContext, "/post/list");
+  }
 }

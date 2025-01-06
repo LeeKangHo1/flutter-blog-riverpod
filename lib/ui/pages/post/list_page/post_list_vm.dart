@@ -104,23 +104,16 @@ class PostListVM extends Notifier<PostListModel?> {
     // 깊은 복사, 새 post가 앞으로 갈지 뒤로 갈지만 정하면 됨, 뒤로 보내는 거 - [...model.posts, post]
     model.posts = [post, ...model.posts];
 
-    // copyWith는 삭제만 반영된 posts 만 넣는 것. 나머지는 그대로 쓰는 것
     state = state!.copyWith(posts: model.posts);
   }
 
-// void search(int id) {
-//   PostListModel model = state!;
-//
-//   model.posts = model.posts.where((p) => p.id == id).toList();
-//
-//   state = state!.copyWith(posts: model.posts);
-// }
-//
-// void biggerThenSearch(int id) {
-//   PostListModel model = state!;
-//
-//   model.posts = model.posts.where((p) => p.id! > id).toList();
-//
-//   state = state!.copyWith(posts: model.posts);
-// }
+  void update(Post post) {
+    PostListModel model = state!;
+
+    // 기존 posts 리스트를 순회하면서 id가 일치하는 경우 업데이트된 post로 교체
+    model.posts = model.posts.map((p) => p.id == post.id ? post : p).toList();
+
+    // 상태를 업데이트된 posts 리스트로 갱신
+    state = state!.copyWith(posts: model.posts);
+  }
 }
