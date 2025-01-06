@@ -21,12 +21,13 @@ class PostListBody extends ConsumerWidget {
             onTap: () {
               // push
               Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => PostDetailPage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => PostDetailPage(model.posts[index].id!)));
             },
             child: PostListItem(post: model.posts[index]),
           );
         },
-        // TODO 지우면 어떻게 되는지 테스트, ListView.separated에서 사용 가능, row 사이 border 생성
         separatorBuilder: (context, index) {
           return const Divider();
         },

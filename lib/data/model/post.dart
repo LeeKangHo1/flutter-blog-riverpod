@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 
 class Post {
   int? id;
-  String? title;
-  String? content;
+  String title;
+  String content;
 
   // type 모르겠으면 final, var, dynamic 등을 붙인다.
   DateTime? createdAt;
@@ -18,8 +18,8 @@ class Post {
   Post.fromMap(Map<String, dynamic> map)
       // 필드 이름 겹치는 거 없으니까 this. 생략 가능
       : id = map["id"],
-        title = map["title"],
-        content = map["content"],
+        title = map["title"] ?? "",
+        content = map["content"] ?? "",
         createdAt = DateFormat("yyyy-mm-dd").parse(map["createdAt"]),
         updatedAt = DateFormat("yyyy-mm-dd").parse(map["updatedAt"]),
         bookmarkCount = map["bookmarkCount"],

@@ -18,6 +18,34 @@ class PostListModel {
   // 자바처럼 inner class 작성이 불가 -> model에 만든 post.dart와 user.dart를 활용
   List<Post> posts;
 
+  // copyWith를 위한 기본 생성자 필요
+  PostListModel({
+    required this.isFirst,
+    required this.isLast,
+    required this.pageNumber,
+    required this.size,
+    required this.totalPage,
+    required this.posts,
+  });
+
+  // 변화 감지를 위해서는 기존 state를 변경(state.posts.where 어쩌고)하면 안되고 복사해서 넣어야 한다.
+  PostListModel copyWith({
+    bool? isFirst,
+    bool? isLast,
+    int? pageNumber,
+    int? size,
+    int? totalPage,
+    List<Post>? posts,
+  }) {
+    return PostListModel(
+        isFirst: isFirst ?? this.isFirst,
+        isLast: isLast ?? this.isLast,
+        pageNumber: pageNumber ?? this.pageNumber,
+        size: size ?? this.size,
+        totalPage: totalPage ?? this.totalPage,
+        posts: posts ?? this.posts);
+  }
+
   PostListModel.fromMap(Map<String, dynamic> map)
       : isFirst = map["isFirst"],
         isLast = map["isLast"],
@@ -26,7 +54,6 @@ class PostListModel {
         totalPage = map["totalPage"],
         // Map<String, dynamic> 이니까 dynamic으로 인식 중이라 묵시적 형변환 후 .map 사용 가능
         posts = (map["posts"] as List<dynamic>)
-            // TODO 체크, Post.fromMap에 집어 넣어서 dynamic을 Map<String, dynamic>로 묵시적 형변환
             .map((e) => Post.fromMap(e))
             .toList();
 }
@@ -46,6 +73,7 @@ class PostListVM extends Notifier<PostListModel?> {
   }
 
   Future<void> init(int page) async {
+    // Logger().d("통신 1번");
     Map<String, dynamic> responseBody =
         await postRepository.findAll(page: page);
 
@@ -59,4 +87,40 @@ class PostListVM extends Notifier<PostListModel?> {
     }
     state = PostListModel.fromMap(responseBody["response"]);
   }
+
+  // 통신없이 상태 갱신
+  void remove(int id) {
+    PostListModel model = state!;
+
+    model.posts = model.posts.where((p) => p.id != id).toList();
+
+    // copyWith는 삭제만 반영된 posts 만 넣는 것. 나머지는 그대로 쓰는 것
+    state = state!.copyWith(posts: model.posts);
+  }
+
+  void add(Post post) {
+    PostListModel model = state!;
+
+    // 깊은 복사, 새 post가 앞으로 갈지 뒤로 갈지만 정하면 됨, 뒤로 보내는 거 - [...model.posts, post]
+    model.posts = [post, ...model.posts];
+
+    // copyWith는 삭제만 반영된 posts 만 넣는 것. 나머지는 그대로 쓰는 것
+    state = state!.copyWith(posts: model.posts);
+  }
+
+// void search(int id) {
+//   PostListModel model = state!;
+//
+//   model.posts = model.posts.where((p) => p.id == id).toList();
+//
+//   state = state!.copyWith(posts: model.posts);
+// }
+//
+// void biggerThenSearch(int id) {
+//   PostListModel model = state!;
+//
+//   model.posts = model.posts.where((p) => p.id! > id).toList();
+//
+//   state = state!.copyWith(posts: model.posts);
+// }
 }
