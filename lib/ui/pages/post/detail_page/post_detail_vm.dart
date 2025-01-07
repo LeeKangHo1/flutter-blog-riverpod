@@ -90,23 +90,24 @@ class PostDetailVM extends AutoDisposeFamilyNotifier<PostDetailModel?, int> {
     Navigator.pop(mContext);
   }
 
-  Future<void> add(String title, String content) async {
-    final requestBody = {
-      "title": title,
-      "content": content,
-    };
-    Map<String, dynamic> responseBody = await postRepository.add(requestBody);
-
-    if (!responseBody["success"]) {
-      ScaffoldMessenger.of(mContext!).showSnackBar(
-        SnackBar(content: Text("글쓰기 실패 : ${responseBody["errorMessage"]}")),
-      );
-      return;
-    }
-    ref
-        .read(postListProvider.notifier)
-        .add(Post.fromMap(responseBody["response"]));
-
-    Navigator.popAndPushNamed(mContext, "/post/list");
-  }
+// postDetailProvider는 postId를 무조건 받아야 해서 postListProvider에서 해결
+//   Future<void> add(String title, String content) async {
+//     final requestBody = {
+//       "title": title,
+//       "content": content,
+//     };
+//     Map<String, dynamic> responseBody = await postRepository.add(requestBody);
+//
+//     if (!responseBody["success"]) {
+//       ScaffoldMessenger.of(mContext!).showSnackBar(
+//         SnackBar(content: Text("글쓰기 실패 : ${responseBody["errorMessage"]}")),
+//       );
+//       return;
+//     }
+//     ref
+//         .read(postListProvider.notifier)
+//         .add(Post.fromMap(responseBody["response"]));
+//
+//     Navigator.popAndPushNamed(mContext, "/post/list");
+//   }
 }
