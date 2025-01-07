@@ -28,7 +28,6 @@ class SessionGVM extends Notifier<SessionUser> {
 
   // async 함수는 Future 붙여. 문법이라고 생각해
   Future<void> login(String username, String password) async {
-    // TODO: Map 안 쓰는 이유. 어차피 불변이면 타입 고려하지 않고 final? 쓰기만 해도 되니까
     final requestBody = {
       "username": username,
       "password": password,
@@ -143,8 +142,13 @@ class SessionGVM extends Notifier<SessionUser> {
     // 3. dio 갱신
     dio.options.headers["Authorization"] = "";
 
-    // 4. 화면 이동
-    Navigator.popAndPushNamed(mContext, "/login");
+    // 화면 다 파괴하고, LoginPage 가기
+    Navigator.pushNamedAndRemoveUntil(
+      mContext,
+      "/login",
+      (route) => false,
+    );
+    // Navigator.popAndPushNamed(mContext, "/post/list");
   }
 }
 

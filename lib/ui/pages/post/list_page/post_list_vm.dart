@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog/data/model/post.dart';
 import 'package:flutter_blog/data/repository/post_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../../main.dart';
@@ -59,17 +60,29 @@ class PostListModel {
             .toList();
 }
 
-final postListProvider = NotifierProvider<PostListVM, PostListModel?>(() {
+// autoDispose -> ui 파괴 -> vm도 파괴 -> refreshCtrl도 파괴
+final postListProvider =
+    NotifierProvider.autoDispose<PostListVM, PostListModel?>(() {
   return PostListVM();
 });
 
-class PostListVM extends Notifier<PostListModel?> {
+// extends AutoDisposeNotifier 으로 변경
+class PostListVM extends AutoDisposeNotifier<PostListModel?> {
   final refreshCtrl = RefreshController();
   final mContext = navigatorKey.currentContext!;
   PostRepository postRepository = const PostRepository();
 
   @override
   PostListModel? build() {
+    // init 전에 PostListVM 과 RefreshController 삭제
+    Logger().d("PostListVM build 실행");
+    ref.onDispose(
+      () {
+        Logger().d("PostListVM 파괴 실행");
+        refreshCtrl.dispose(); // 가비지 컬렉션이 바로 일어나지 않으니까. 삭제한다고 바로 삭제되는게 아니라서
+      },
+    );
+
     init();
     return null; // watch로 볼 예정이라 반환값 필요 x
   }
@@ -146,7 +159,8 @@ class PostListVM extends Notifier<PostListModel?> {
 
     // 상태 갱신
     state = state!.copyWith(posts: model.posts);
-    Navigator.popAndPushNamed(mContext, "/post/list");
+
+    Navigator.pop(mContext);
   }
 
   void update(Post post) {
